@@ -260,7 +260,7 @@ public:
                             Scalar approx_error, unsigned int iterations = 10,
                             bool use_projection = true);
 
-    void custom_remeshing(const std::vector<Scalar>& target_edge_lengths,
+    void custom_remeshing(const std::vector<double>& target_edge_lengths,
                             Scalar approx_error, unsigned int iterations = 10,
                             bool use_projection = true);
 
@@ -298,7 +298,7 @@ private:
 
     bool uniform_;
     bool custom_vertex_edgeLengths_;
-    const std::vector<Scalar>* target_edge_lengths_per_vertex_; // Pointer
+    const std::vector<double>* target_edge_lengths_per_vertex_; // Pointer
     Scalar target_edge_length_;
     Scalar min_edge_length_;
     Scalar max_edge_length_;
@@ -392,7 +392,7 @@ void Remeshing::adaptive_remeshing(Scalar min_edge_length,
 }
 
 
-void Remeshing::custom_remeshing(const std::vector<Scalar>& target_edge_lengths,
+void Remeshing::custom_remeshing(const std::vector<double>& target_edge_lengths,
                                  Scalar approx_error, unsigned int iterations,
                                  bool use_projection)
 {
