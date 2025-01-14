@@ -261,8 +261,8 @@ public:
                             bool use_projection = true);
 
     void custom_remeshing(const std::vector<double>& target_edge_lengths,
-                            Scalar approx_error, unsigned int iterations = 10,
-                            bool use_projection = true);
+                          unsigned int iterations = 10, bool use_projection = true);
+                            
 
 private:
     void preprocessing();
@@ -393,13 +393,11 @@ void Remeshing::adaptive_remeshing(Scalar min_edge_length,
 
 
 void Remeshing::custom_remeshing(const std::vector<double>& target_edge_lengths,
-                                 Scalar approx_error, unsigned int iterations,
-                                 bool use_projection)
+                                 unsigned int iterations, bool use_projection)
 {
     uniform_ = false;
     custom_vertex_edgeLengths_ = true;
     target_edge_lengths_per_vertex_ = &target_edge_lengths;
-    approx_error_ = approx_error;
     use_projection_ = use_projection;
 
     preprocessing();
@@ -1241,8 +1239,7 @@ void adaptive_remeshing(SurfaceMesh& mesh, Scalar min_edge_length,
 
 void custom_remeshing(SurfaceMesh& mesh, 
                       const std::vector<double>& target_edge_lengths,
-                      Scalar approx_error, unsigned int iterations,
-                      bool use_projection)
+                      unsigned int iterations, bool use_projection)
 {
 }
 
