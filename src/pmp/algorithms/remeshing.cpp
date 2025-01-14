@@ -1240,7 +1240,7 @@ void adaptive_remeshing(SurfaceMesh& mesh, Scalar min_edge_length,
 }
 
 void custom_remeshing(SurfaceMesh& mesh, 
-                      const std::vector<Scalar>& target_edge_lengths,
+                      const std::vector<double>& target_edge_lengths,
                       Scalar approx_error, unsigned int iterations,
                       bool use_projection)
 {
