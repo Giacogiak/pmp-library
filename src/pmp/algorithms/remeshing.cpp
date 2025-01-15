@@ -18,6 +18,9 @@
 #include "pmp/algorithms/distance_point_triangle.h"
 #include "pmp/bounding_box.h"
 
+#include <iostream>
+#include <fstream>
+#include <vector>
 namespace pmp {
 namespace {
 
@@ -525,6 +528,8 @@ void Remeshing::preprocessing()
                 vsizing_[v] = curvatures[v];
         }
 
+
+
         // curvature values might be noisy. smooth them.
         // don't consider feature vertices' curvatures.
         // don't consider boundary vertices' curvatures.
@@ -553,6 +558,18 @@ void Remeshing::preprocessing()
                 vsizing_[v] = cc;
             }
         }
+
+
+        // Write the values to the output file
+        std::ofstream out_file("D : / curvatureValues.txt ");
+        
+
+        out_file << "vertex_scalars values: ";
+        for (auto v : mesh_.vertices())
+        {
+            out_file << vsizing_[v] << " ";
+        }
+        out_file << std::endl;
 
         // now convert per-vertex curvature into target edge length
         for (auto v : mesh_.vertices())
@@ -584,6 +601,17 @@ void Remeshing::preprocessing()
             // store target edge length
             vsizing_[v] = h;
         }
+
+
+          // Write the values to the output file
+        std::ofstream out_file("D : / lengthValues.txt ");
+
+        out_file << "vertex_scalars values: ";
+        for (auto v : mesh_.vertices())
+        {
+            out_file << vsizing_[v] << " ";
+        }
+        out_file << std::endl;
     }
 
     else // if custom_vertex_edgeLengths_ is true
