@@ -7,10 +7,10 @@ project(
   HOMEPAGE_URL "https://www.pmp-library.org")
 cmake_policy(SET CMP0072 NEW)
 
-option(PMP_BUILD_EXAMPLES "Build the PMP examples" ON)
-option(PMP_BUILD_TESTS "Build the PMP test programs" ON)
-option(PMP_BUILD_DOCS "Build the PMP documentation" ON)
-option(PMP_BUILD_VIS "Build the PMP visualization tools" ON)
+option(PMP_BUILD_EXAMPLES "Build the PMP examples" OFF)
+option(PMP_BUILD_TESTS "Build the PMP test programs" OFF)
+option(PMP_BUILD_DOCS "Build the PMP documentation" OFF)
+option(PMP_BUILD_VIS "Build the PMP visualization tools" OFF)
 option(PMP_INSTALL "Install the PMP library and headers" ON)
 option(PMP_STRICT_COMPILATION "Treat compiler warnings as errors" ON)
 option(PMP_BUILD_REGRESSIONS "Build the PMP regression test programs" OFF)
@@ -32,42 +32,6 @@ if(PMP_BUILD_VIS)
 
   add_subdirectory(${STB_IMAGE_WRITE_SOURCE_DIR})
   add_subdirectory(${STB_IMAGE_SOURCE_DIR})
-
-  # Building only the GLFW lib
-  set(BUILD_SHARED_LIBS
-      OFF
-      CACHE BOOL "")
-  set(GLFW_BUILD_EXAMPLES
-      OFF
-      CACHE BOOL "")
-  set(GLFW_BUILD_TESTS
-      OFF
-      CACHE BOOL "")
-  set(GLFW_BUILD_DOCS
-      OFF
-      CACHE BOOL "")
-  set(GLFW_INSTALL
-      OFF
-      CACHE BOOL "")
-
-  # disable GLFW wayland support if scanner is not found. See #207
-  find_program(WAYLAND_SCANNER_EXECUTABLE NAMES wayland-scanner)
-  if(NOT WAYLAND_SCANNER_EXECUTABLE)
-    set(GLFW_BUILD_WAYLAND False)
-  endif()
-
-  # setup use of GLFW and GLEW
-  if(NOT EMSCRIPTEN)
-    add_subdirectory(${GLFW_SOURCE_DIR_INTERNAL} ${GLEW_SOURCE_DIR})
-
-    add_definitions(-DGLEW_STATIC)
-    add_library(glew STATIC ${GLEW_SOURCE_DIR}/src/glew.c
-                            ${GLEW_SOURCE_DIR}/include)
-    set_property(TARGET glew PROPERTY POSITION_INDEPENDENT_CODE ON)
-    target_include_directories(glew PUBLIC ${GLEW_SOURCE_DIR}/include
-                                           ${GLFW_SOURCE_DIR_INTERNAL}/include)
-    target_link_libraries(glew ${GLFW_LIBRARIES})
-  endif()
 
   # setup IMGUI
   add_subdirectory(${IMGUI_SOURCE_DIR})
