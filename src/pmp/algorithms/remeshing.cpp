@@ -260,7 +260,7 @@ public:
                             Scalar approx_error, unsigned int iterations = 10,
                             bool use_projection = true);
 
-    void custom_remeshing(const std::vector<double>& target_edge_lengths,
+    void custom_remeshing(std::vector<double>& target_edge_lengths,
                           unsigned int iterations = 10, bool use_projection = true);
                             
 
@@ -298,7 +298,7 @@ private:
 
     bool uniform_;
     bool custom_vertex_edgeLengths_;
-    const std::vector<double>* target_edge_lengths_per_vertex_; // Pointer
+    std::vector<double> target_edge_lengths_per_vertex_;
     Scalar target_edge_length_;
     Scalar min_edge_length_;
     Scalar max_edge_length_;
@@ -338,6 +338,7 @@ void Remeshing::uniform_remeshing(Scalar edge_length, unsigned int iterations,
                                   bool use_projection)
 {
     uniform_ = true;
+    custom_vertex_edgeLengths_ = false;
     use_projection_ = use_projection;
     target_edge_length_ = edge_length;
 
@@ -366,6 +367,7 @@ void Remeshing::adaptive_remeshing(Scalar min_edge_length,
                                    unsigned int iterations, bool use_projection)
 {
     uniform_ = false;
+    custom_vertex_edgeLengths_ = false;
     min_edge_length_ = min_edge_length;
     max_edge_length_ = max_edge_length;
     approx_error_ = approx_error;
@@ -392,12 +394,12 @@ void Remeshing::adaptive_remeshing(Scalar min_edge_length,
 }
 
 
-void Remeshing::custom_remeshing(const std::vector<double>& target_edge_lengths,
+void Remeshing::custom_remeshing(std::vector<double>& target_edge_lengths,
                                  unsigned int iterations, bool use_projection)
 {
     uniform_ = false;
     custom_vertex_edgeLengths_ = true;
-    target_edge_lengths_per_vertex_ = &target_edge_lengths;
+    target_edge_lengths_per_vertex_ = target_edge_lengths;
     use_projection_ = use_projection;
 
     preprocessing();
@@ -428,6 +430,11 @@ void Remeshing::preprocessing()
     vlocked_ = mesh_.add_vertex_property<bool>("v:locked", false);
     elocked_ = mesh_.add_edge_property<bool>("e:locked", false);
     vsizing_ = mesh_.add_vertex_property<Scalar>("v:sizing");
+
+    if (!vsizing_)
+    {
+        std::cerr << "Failed to add v:sizing property to the mesh.\n";
+    }
 
     // lock unselected vertices if some vertices are selected
     auto vselected = mesh_.get_vertex_property<bool>("v:selected");
@@ -591,7 +598,7 @@ void Remeshing::preprocessing()
         int id = 0;
         for (auto v : mesh_.vertices())
         {
-            vsizing_[v] = (*target_edge_lengths_per_vertex_)[id];
+            vsizing_[v] = target_edge_lengths_per_vertex_[id];
             id++;
         }
     }
@@ -1239,9 +1246,11 @@ void adaptive_remeshing(SurfaceMesh& mesh, Scalar min_edge_length,
 }
 
 void custom_remeshing(SurfaceMesh& mesh, 
-                      const std::vector<double>& target_edge_lengths,
+                      std::vector<double>& target_edge_lengths,
                       unsigned int iterations, bool use_projection)
 {
+    Remeshing(mesh).custom_remeshing(target_edge_lengths, iterations,
+                                       use_projection);
 }
 
 } // namespace pmp
