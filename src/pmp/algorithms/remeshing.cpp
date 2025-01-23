@@ -1045,6 +1045,7 @@ void Remeshing::tangential_smoothing(unsigned int iterations)
                     catch (SolverException&)
                     {
                         p = weighted_centroid(v);
+                        throw SolverException("Failed at tangential_smoothing");
                     }
                     u = p - mesh_.position(v);
 
