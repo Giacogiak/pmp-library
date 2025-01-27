@@ -147,6 +147,9 @@ endif()
 option(WITH_CLANG_TIDY "Run clang-tidy checks" OFF)
 include(clang-tidy)
 
+# Add the executables directory as a subdirectory
+add_subdirectory(src/pmp/executables)
+
 # which directories to process
 if(EMSCRIPTEN)
   add_subdirectory(src/pmp)
