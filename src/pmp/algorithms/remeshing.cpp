@@ -401,7 +401,6 @@ void Remeshing::custom_remeshing(std::vector<double>& target_edge_lengths,
     custom_vertex_edgeLengths_ = true;
     target_edge_lengths_per_vertex_ = target_edge_lengths;
     use_projection_ = use_projection;
-
     preprocessing();
 
     for (unsigned int i = 0; i < iterations; ++i)
@@ -416,9 +415,7 @@ void Remeshing::custom_remeshing(std::vector<double>& target_edge_lengths,
 
         tangential_smoothing(5);
     }
-
     remove_caps();
-
     postprocessing();
 }
 
@@ -595,7 +592,7 @@ void Remeshing::preprocessing()
 
     else // if custom_vertex_edgeLengths_ is true
     {    
-        int id = 0;
+        size_t id = 0;
         for (auto v : mesh_.vertices())
         {
             vsizing_[v] = target_edge_lengths_per_vertex_[id];
