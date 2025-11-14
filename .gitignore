@@ -4,3 +4,5 @@ debug
 .cache
 .vscode
 .DS_store
+.vs
+src/.vs
